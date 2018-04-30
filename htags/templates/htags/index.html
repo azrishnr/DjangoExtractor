@@ -1,0 +1,39 @@
+{% extends 'htags/layout.html' %}
+
+{% block content %}
+
+<h4>URL list</h4>
+
+<form class="col s12" action="{% url 'htags:index' %}" method="post">
+    {% csrf_token %}
+    {% for url in urls %} 
+    <div class="row">
+        <div class="input-field col s12">
+            <input readonly="readonly" value="{{url.url_text}}" id="disabled" type="text" class="validate">
+        </div>
+    </div>
+    {% endfor %}
+    <br>
+    <button class="btn waves-effect waves-light" type="submit" name="action">Extract
+        <i class="material-icons right"></i>
+    </button>
+    <br>
+</form>
+<br>
+
+<div id="wait" style="display:none">
+    <br>Extracting...
+</div>
+
+<script>
+    $(document).ready(function(){
+        
+        $("btn waves-effect waves-light").click(function(){
+            $("#wait").show();
+        });
+    });
+</script>
+
+{% if message %}<p><strong>{{ message }}</strong></p>{% endif %}
+
+{% endblock %}
