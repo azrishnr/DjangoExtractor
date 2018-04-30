@@ -33,18 +33,25 @@ def index(requests):
 
 def add(request):
     if(request.method == 'POST'):
-        url_text = request.POST['hdrurl']
-        try:
-            URLValidator()(url_text)
-        except ValidationError:
-            return render(request, 'htags/add.html', {
-                'error_message': "Enter a valid URL",
-            })
-        url = URL(url_text=url_text)
-        url.save()
+        url_text = []
+        for i in range(55):
+            poststr = 'hdrurl'+str(i+1)
+            url_text.append(request.POST[poststr]) 
+            try:
+                URLValidator()(url_text[i])
+            except ValidationError:
+                return render(request, 'htags/add.html', {
+                    'error_message': "Enter a valid URL for all fields",
+                })
+            url = URL(url_text=url_text[i])
+            url.save()
         return redirect('/htags')
     else:
-        return render(request, 'htags/add.html')
+        items = list(range(55))
+        context = {
+            'items': items
+        }
+        return render(request, 'htags/add.html', context)
 
 
 def extract(urllist):
